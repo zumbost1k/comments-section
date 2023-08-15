@@ -7,6 +7,7 @@ import { changeCommentText, changeQuantityLikes, deleteComment } from '@/feature
 import ReactModal from 'react-modal';
 import Delete from '@/icons/delete';
 import Edit from '@/icons/edit';
+import { currentUser } from '@/store/selectors';
 const dateDifference = (startDate) => {
     const endDate = moment().format('YYYY-MM-DD HH:mm')
     const startMoment = moment(startDate, 'YYYY-MM-DD HH:mm');
@@ -31,7 +32,8 @@ const AllCommentsList = ({ comment }) => {
     const [showModal, setShowModal] = useState(false)
     const [isEditable, setIsEditable] = useState(false);
     const [textareaValue, setTextareaValue] = useState(comment.text);
-
+    const CurrentUserId = useSelector(currentUser)
+    const isCurrentUserComment = CurrentUserId === comment.userId
     const toggleEdit = () => {
         setIsEditable(!isEditable);
     };
@@ -44,7 +46,7 @@ const AllCommentsList = ({ comment }) => {
         if (newQuantityLikes > 0) {
             dispatch(
                 changeQuantityLikes({
-                    id: comment.id,
+                    id: comment.postId,
                     quantityOflikes: newQuantityLikes
                 })
             )
@@ -53,11 +55,11 @@ const AllCommentsList = ({ comment }) => {
 
     return (
 
-        <div className='comments_item' key={comment.id}>
+        <div className='comments_item' key={comment.postId}>
             <div className='comment_user_info'>
                 <img src={`/photos/photosForProfile/${comment.pathToProfilePhoto}`} alt={comment.userName} width='32' height='32' />
                 <p className='comment_user_name'>{comment.userName} </p>
-                <span className='its_you'>you</span>
+                {isCurrentUserComment && <span className='its_you'>you</span>}
                 <p className='comment_user_date'>{dateDifference(comment.date)}</p>
             </div>
             {!isEditable ? <p className='comment_user_text'>{comment.text}</p> : <textarea value={textareaValue} onChange={handleTextareaChange} className='comment_user_text' />}
@@ -66,14 +68,14 @@ const AllCommentsList = ({ comment }) => {
                 <span className='quantity_of_likes_textholder'>{comment.quantityOflikes}</span>
                 <button type='button' className='quantity_calc_button' onClick={() => { changeQuantityLikesHandler(Number(comment.quantityOflikes) - 1) }}><img width='10' height='10' src='/photos/-.svg' alt='minus' /></button>
             </div>
-            <div className='delete_edit_buttons_container'>
+            {isCurrentUserComment ? <div className='delete_edit_buttons_container'>
                 <button onClick={() => { setShowModal(true) }} disabled={isEditable} type='button' className='edit_comment_state_button delete_btn'><Delete /> Delete</button>
                 <button type='button' disabled={isEditable} onClick={toggleEdit} className='edit_comment_state_button edit_btn'><Edit /> Edit</button>
-            </div>
+            </div> : <button className='delete_edit_buttons_container reply_btn' type="button"><img src="/photos/Reply.svg" alt="reply" width='14' height='13'/><span className='reply_text'>Reply</span> </button>}
             <button disabled={!isEditable} className='udate_comment_text_btn' onClick={() => {
                 toggleEdit()
                 dispatch(changeCommentText({
-                    id: comment.id,
+                    id: comment.postId,
                     newCommentText: textareaValue
                 }))
             }}>UPDATE</button>
@@ -92,7 +94,7 @@ const AllCommentsList = ({ comment }) => {
                             <button className='modal_btn modal_cancel' type='button' onClick={() => { setShowModal(false) }}>NO, CANCEL</button>
                             <button className='modal_btn modal_delete' type='button' onClick={() => {
                                 setShowModal(false)
-                                dispatch(deleteComment(comment.id))
+                                dispatch(deleteComment(comment.postId))
                             }}>YES, DELETE</button>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ import { addComment } from '@/features/allComments/allComments';
 import { v4 } from 'uuid';
 import moment from 'moment/moment';
 import { allAccountsList } from '@/store/selectors';
+import { changeCurrentUser } from '@/features/currentUser/currentUser';
 const AddMessage = () => {
     const allAccounts = useSelector(allAccountsList)
     console.log(allAccounts)
@@ -14,7 +15,8 @@ const AddMessage = () => {
     const addMessageHandler = (event) => {
         event.preventDefault();
         const messagetInf = {
-            id: v4(),
+            postId: v4(),
+            userId: currentUser.id,
             text: currentTextAreaValue,
             userName: currentUser.accountName,
             date: moment().format('YYYY-MM-DD HH:mm'),
@@ -33,7 +35,11 @@ const AddMessage = () => {
                     <img className='avatar' width='32' height='32' src={`/photos/photosForProfile/${currentUser.pathToPhoto}`} alt='avatar' />
                     <button className='send_message' type='submit'>SEND</button>
                 </form>
-                <select onChange={newUserId => { setCurrentUser(allAccounts.find(account => account.id === newUserId.target.value)) }} name='user_names' id='user_names'>
+                <select onChange={newUserId => {
+                    const currentAccount = allAccounts.find(account => account.id === newUserId.target.value)
+                    setCurrentUser(currentAccount)
+                    dispatch(changeCurrentUser(currentAccount.id))
+                }} name='user_names' id='user_names'>
                     {allAccounts.map(account => {
                         return (<option value={account.id}><p>{account.accountName}</p></option>)
                     })}

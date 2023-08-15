@@ -14,18 +14,18 @@ export const allCommentsSlice = createSlice({
         changeQuantityLikes: (state, action) => {
             const { id, quantityOflikes } = action.payload;
             state.allCommentsList = state.allCommentsList.map(p => {
-                if (p.id === id) {
+                if (p.postId === id) {
                     return { ...p, quantityOflikes: quantityOflikes };
                 }
                 return p;
             });
         }, deleteComment: (state, action) => {
-            state.allCommentsList = state.allCommentsList.filter((comment) => comment.id !== action.payload)
+            state.allCommentsList = state.allCommentsList.filter((comment) => comment.postId !== action.payload)
         },
         changeCommentText: (state, action) => {
             const { id, newCommentText } = action.payload;
             state.allCommentsList = state.allCommentsList.map(p => {
-                if (p.id === id) {
+                if (p.postId === id) {
                     return { ...p, text: newCommentText };
                 }
                 return p;

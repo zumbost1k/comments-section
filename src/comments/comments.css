@@ -109,6 +109,21 @@
     gap: 16px;
 }
 
+.reply_btn {
+    color: var(--moderate-blue, #5357B6);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.reply_text{
+    margin-top: -6px;
+    margin-left: -7px;
+}
+
 .delete_btn {
     color: var(--soft-red, #ED6368);
     font-size: 16px;
