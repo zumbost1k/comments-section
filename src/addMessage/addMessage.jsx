@@ -8,7 +8,6 @@ import { allAccountsList } from '@/store/selectors';
 import { changeCurrentUser } from '@/features/currentUser/currentUser';
 const AddMessage = () => {
     const allAccounts = useSelector(allAccountsList)
-    console.log(allAccounts)
     const [currentTextAreaValue, setCurrentTextAreaValue] = useState('')
     const [currentUser, setCurrentUser] = useState(allAccounts[0])
     const dispatch = useDispatch()
@@ -21,7 +20,8 @@ const AddMessage = () => {
             userName: currentUser.accountName,
             date: moment().format('YYYY-MM-DD HH:mm'),
             pathToProfilePhoto: currentUser.pathToPhoto,
-            quantityOflikes: 1
+            quantityOflikes: 1,
+            answers: []
         }
         dispatch(addComment(messagetInf))
         setCurrentTextAreaValue('')
@@ -38,10 +38,10 @@ const AddMessage = () => {
                 <select onChange={newUserId => {
                     const currentAccount = allAccounts.find(account => account.id === newUserId.target.value)
                     setCurrentUser(currentAccount)
-                    dispatch(changeCurrentUser(currentAccount.id))
+                    dispatch(changeCurrentUser(currentAccount))
                 }} name='user_names' id='user_names'>
                     {allAccounts.map(account => {
-                        return (<option value={account.id}><p>{account.accountName}</p></option>)
+                        return (<option key={account.id} value={account.id}>{account.accountName}</option>)
                     })}
                 </select>
             </section>
