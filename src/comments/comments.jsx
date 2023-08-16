@@ -224,7 +224,6 @@ const AllCommentsList = ({ comment }) => {
 
 const Comment = () => {
     const allComments = useSelector(allCommentsList)
-    console.log(allComments)
     return (
         <section className='all_comments'>
             {allComments.map(comment => { return <AllCommentsList comment={comment} /> })}
