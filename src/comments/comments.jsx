@@ -1,4 +1,4 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './comments.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { allCommentsList } from '@/store/selectors';
