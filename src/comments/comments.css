@@ -217,8 +217,9 @@
     display: none;
 }
 
-.message_textarea::first-word {
+.comment_user_text_first_word {
     color: #5357B6;
+    font-weight: 600;
 }
 
 

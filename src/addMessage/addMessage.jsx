@@ -23,7 +23,10 @@ const AddMessage = () => {
             quantityOflikes: 1,
             answers: []
         }
-        dispatch(addComment(messagetInf))
+        dispatch(addComment({
+            id: 'no id',
+            newComment: messagetInf,
+        }))
         setCurrentTextAreaValue('')
     }
     if (allAccounts) {
