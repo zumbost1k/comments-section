@@ -9,6 +9,7 @@ import Delete from '@/icons/delete';
 import Edit from '@/icons/edit';
 import { currentUser } from '@/store/selectors';
 import { v4 } from 'uuid';
+import { allAccountsList } from '@/store/selectors';
 const dateDifference = (startDate) => {
     const endDate = moment().format('YYYY-MM-DD HH:mm')
     const startMoment = moment(startDate, 'YYYY-MM-DD HH:mm');
@@ -27,7 +28,7 @@ const dateDifference = (startDate) => {
     }
 }
 
-const IsInvocation = ({ commentText }) => {
+const IsToAddressTheUser = ({ commentText }) => {
     const firstSpaceIndex = commentText.indexOf(' ');
     const firstWord = commentText.substring(0, firstSpaceIndex);
 
@@ -50,7 +51,10 @@ const AllCommentsList = ({ comment }) => {
     const [isEditable, setIsEditable] = useState(false);
     const [textareaValue, setTextareaValue] = useState(comment.text);
     const [isReplying, setIsReplying] = useState(false)
-    const [replyText, setReplyText] = useState(`@${comment.userName}`)
+
+    const allAccounts = useSelector(allAccountsList)
+    const commentAuthor = allAccounts.find(user => user.id === comment.userId)
+    const [replyText, setReplyText] = useState(`@${commentAuthor.accountName}`)
     const currentUserInfo = useSelector(currentUser)
     const isCurrentUserComment = currentUserInfo.id === comment.userId
     const toggleEdit = () => {
@@ -64,9 +68,7 @@ const AllCommentsList = ({ comment }) => {
             postId: v4(),
             userId: currentUserInfo.id,
             text: replyText,
-            userName: currentUserInfo.accountName,
             date: moment().format('YYYY-MM-DD HH:mm'),
-            pathToProfilePhoto: currentUserInfo.pathToPhoto,
             quantityOflikes: 1,
             answers: []
         }
@@ -99,12 +101,12 @@ const AllCommentsList = ({ comment }) => {
         <div key={comment.postId}>
             <div className='comments_item' >
                 <div className='comment_user_info'>
-                    <img src={`/photos/photosForProfile/${comment.pathToProfilePhoto}`} alt={comment.userName} width='32' height='32' />
-                    <p className='comment_user_name'>{comment.userName} </p>
+                    <img src={`/photos/photosForProfile/${commentAuthor.pathToPhoto}`} alt={commentAuthor.accountName} width='32' height='32' />
+                    <p className='comment_user_name'>{commentAuthor.accountName} </p>
                     {isCurrentUserComment && <span className='its_you'>you</span>}
                     <p className='comment_user_date'>{dateDifference(comment.date)}</p>
                 </div>
-                {!isEditable ? <IsInvocation commentText={comment.text} /> : <textarea ref={textareaRef} style={{ height: textareaHeight }} value={textareaValue} onChange={(event) => { setTextareaValue(event.target.value) }} className='comment_user_text' />}
+                {!isEditable ? <IsToAddressTheUser commentText={comment.text} /> : <textarea ref={textareaRef} style={{ height: textareaHeight }} value={textareaValue} onChange={(event) => { setTextareaValue(event.target.value) }} className='comment_user_text' />}
                 <div className='quantity_of_likes_container'>
                     <button type='button' className='quantity_calc_button' onClick={() => { changeQuantityLikesHandler(Number(comment.quantityOflikes) + 1) }}><img width='10' height='10' src='/photos/+.svg' alt='minus' /></button>
                     <span className='quantity_of_likes_textholder'>{comment.quantityOflikes}</span>
@@ -165,7 +167,6 @@ const AllCommentsList = ({ comment }) => {
 
 const Comment = () => {
     const allComments = useSelector(allCommentsList)
-    console.log(allComments)
     return (
         <section className='all_comments'>
             {allComments.map(comment => { return <AllCommentsList comment={comment} /> })}

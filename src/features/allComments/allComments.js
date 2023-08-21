@@ -11,7 +11,7 @@ export const allCommentsSlice = createSlice({
         addComment: (state, action) => {
             const { id, newComment } = action.payload;
             const addAnswerToComment = (data, parentId, newObject) => {
-                if (parentId === 'no id') {
+                if (!parentId) {
                     return data.concat(newObject);
                 }
                 for (let i = 0; i < data.length; i++) {
