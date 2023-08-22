@@ -81,9 +81,17 @@
 }
 
 .quantity_of_likes_textholder {
+    text-align: center;
+    width: 14px;
     color: var(--moderate-blue, #5357B6);
     font-size: 16px;
     font-weight: 600;
+}
+
+.comment_user_edit_textarea{
+    outline: none;
+    border-radius: 8px;
+    border: 1px solid var(--light-gray, #E9EBF0);
 }
 
 .edit_comment_state_buttons {

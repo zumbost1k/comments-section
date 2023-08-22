@@ -29,19 +29,28 @@ const dateDifference = (startDate) => {
 }
 
 const IsToAddressTheUser = ({ commentText }) => {
+    const allAccounts = useSelector(allAccountsList)
     const firstSpaceIndex = commentText.indexOf(' ');
-    const firstWord = commentText.substring(0, firstSpaceIndex);
+    const firstWord = commentText.substring(1, firstSpaceIndex);
+    let isAdress = false
+    allAccounts.forEach(account => {
+        if (firstWord === account.accountName) {
+            isAdress = true;
 
-    if (firstWord.charAt(0) === '@') {
+        }
+    });
+
+    if (isAdress) {
         return (
             <p className='comment_user_text'>
-                <span className='comment_user_text_first_word'>{firstWord}</span>{' '}
+                <span className='comment_user_text_first_word'>@{firstWord}</span>{' '}
                 {commentText.slice(firstSpaceIndex + 1)}
             </p>
         );
-    } else {
-        return <p className='comment_user_text'>{commentText}</p>;
     }
+    else { return <p className='comment_user_text'>{commentText}</p>; }
+
+
 }
 
 const AllCommentsList = ({ comment }) => {
@@ -106,7 +115,7 @@ const AllCommentsList = ({ comment }) => {
                     {isCurrentUserComment && <span className='its_you'>you</span>}
                     <p className='comment_user_date'>{dateDifference(comment.date)}</p>
                 </div>
-                {!isEditable ? <IsToAddressTheUser commentText={comment.text} /> : <textarea ref={textareaRef} style={{ height: textareaHeight }} value={textareaValue} onChange={(event) => { setTextareaValue(event.target.value) }} className='comment_user_text' />}
+                {!isEditable ? <IsToAddressTheUser commentText={comment.text} /> : <textarea ref={textareaRef} style={{ height: textareaHeight }} value={textareaValue} onChange={(event) => { setTextareaValue(event.target.value) }} autoFocus className='comment_user_text comment_user_edit_textarea' />}
                 <div className='quantity_of_likes_container'>
                     <button type='button' className='quantity_calc_button' onClick={() => { changeQuantityLikesHandler(Number(comment.quantityOflikes) + 1) }}><img width='10' height='10' src='/photos/+.svg' alt='minus' /></button>
                     <span className='quantity_of_likes_textholder'>{comment.quantityOflikes}</span>
