@@ -69,10 +69,15 @@
     border-radius: 8px;
     background: var(--moderate-blue, #5357B6);
     order: 4;
+    cursor: pointer;
 }
 
 .udate_comment_text_btn:disabled {
     display: none;
+}
+
+.udate_comment_text_btn:hover {
+    background: var(--moderate-blue, #4c4fa5);
 }
 
 .quantity_calc_button {
@@ -88,7 +93,9 @@
     font-weight: 600;
 }
 
-.comment_user_edit_textarea{
+.comment_user_edit_textarea {
+    resize: none;
+    padding: 12px 24px;
     outline: none;
     border-radius: 8px;
     border: 1px solid var(--light-gray, #E9EBF0);
@@ -100,6 +107,9 @@
     justify-content: space-between;
     padding-top: 16px;
 }
+
+
+
 
 .edit_comment_state_button {
     background: none;
